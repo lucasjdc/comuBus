@@ -2,11 +2,13 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/lucasjdc/comuBus/handlers"
 )
 
 // eu coloca a função HandleRequest no controller ou deixo aqui?
 
 func HandleRequest(r *gin.Engine) {
+
 	addRoute := func(path string, template string, title string) {
 		r.GET(path, func(c *gin.Context) {
 			c.HTML(200, template, gin.H{
@@ -23,4 +25,7 @@ func HandleRequest(r *gin.Engine) {
 	addRoute("/chat", "tela_6.html", "Chat")
 	addRoute("/encaminhar", "tela_7.html", "Encaminhar Demanda")
 	addRoute("/futuro", "tela_8.html", "Funcionalidades Futuras")
+
+	// Nova rota POST
+	r.POST("/cadastro", handlers.CadastrarUsuario)
 }

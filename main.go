@@ -15,6 +15,5 @@ func main() {
 
 	routes.HandleRequest(r)
 
-
 	r.Run()
 }
