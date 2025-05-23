@@ -33,3 +33,22 @@ func CadastrarUsuario(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"mensagem": "Usuário cadastrado com sucesso!"})
 }
+
+func LoginUsuario(c *gin.Context) {
+	var login struct {
+		Email string `json:"email"`
+		Senha string `json:"senha"`
+	}
+
+	if err := c.BindJSON(&login); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"mensagem":"Dados inválidos"})
+		return
+	}
+
+	// Aqui você faria a verificação com o banco de dados
+	if login.Email == "teste@teste.com" && login.Senha == "123456" {
+		c.JSON(http.StatusOK, gin.H{"mensagem": "Login bem-sucedido"})
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{"mensagem": "Credenciais inválidas"})
+	}
+}

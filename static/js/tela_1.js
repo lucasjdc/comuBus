@@ -23,10 +23,39 @@ document.getElementById('forgotPasswordLink').addEventListener('click', (e) => {
     alert('Instruções para recuperação de senha serão enviadas ao seu e-mail.');
 });
 
-loginForm.addEventListener('submit', (e) => {
+loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    alert('Login efetuado (simulado).');
-    loginForm.reset();
+
+    const data = {
+        email: document.getElementById('loginEmail').value,
+        senha: document.getElementById('loginPassword').value
+    };
+
+    try {
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            // Redireciona para a página de comunidades
+            window.location.href = '/navegacao';
+        } else {
+            alert(result.mensagem || 'Erro no login');
+        }
+    } catch (error) {
+        alert('Erro na comunicação com o servidor.');
+        console.error(error);
+    }
+
+
+    //alert('Login efetuado (simulado).');
+    //loginForm.reset();
 });
 
 signupForm.addEventListener('submit', async (e) => {

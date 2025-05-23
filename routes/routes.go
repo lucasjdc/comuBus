@@ -5,8 +5,6 @@ import (
 	"github.com/lucasjdc/comuBus/handlers"
 )
 
-// eu coloca a função HandleRequest no controller ou deixo aqui?
-
 func HandleRequest(r *gin.Engine) {
 
 	addRoute := func(path string, template string, title string) {
@@ -25,7 +23,9 @@ func HandleRequest(r *gin.Engine) {
 	addRoute("/chat", "tela_6.html", "Chat")
 	addRoute("/encaminhar", "tela_7.html", "Encaminhar Demanda")
 	addRoute("/futuro", "tela_8.html", "Funcionalidades Futuras")
+	addRoute("/navegacao", "tela_9.html", "Navegação")
 
 	// Nova rota POST
 	r.POST("/cadastro", handlers.CadastrarUsuario)
+	r.POST("/login", handlers.LoginUsuario)
 }

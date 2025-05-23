@@ -68,7 +68,10 @@
       const btnChat = document.createElement('button');
       btnChat.className = 'btn-chat';
       btnChat.textContent = 'Chat';
-      btnChat.onclick = () => alert(`Entrando no chat da linha ${comunidade.linha}`);
+      btnChat.onclick = () => {
+        window.location.href = '/chat';
+      }
+        
 
       actions.appendChild(btnFavoritar);
       actions.appendChild(btnChat);
