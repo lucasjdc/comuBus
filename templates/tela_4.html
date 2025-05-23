@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Favoritos - ComuBus</title>
+  <link rel="stylesheet" href="/static/css/tela_4.css" />  
+</head>
+<body>
+  <div class="container">
+    <h1>Linhas Favoritas</h1>
+
+    <div id="listaFavoritos"></div>
+
+    <div id="semFavoritos" class="empty" style="display:none;">
+      Você ainda não favoritou nenhuma linha.
+    </div>
+  </div>
+
+  <script>
+    // Simulação das linhas favoritas do usuário
+    const favoritos = [
+      { linha: '115', nome: 'Vila Jardim ↔ Centro Histórico' },
+      { linha: 'T1', nome: 'Terminal Vila Jardim ↔ Centro' },
+      { linha: '412', nome: 'Vila Jardim ↔ Restinga' },
+    ];
+
+    const listaFavoritosDiv = document.getElementById('listaFavoritos');
+    const semFavoritosDiv = document.getElementById('semFavoritos');
+
+    function criarElementoFavorito(favorito) {
+      const div = document.createElement('div');
+      div.className = 'favorito';
+
+      const info = document.createElement('div');
+      info.className = 'info';
+      info.innerHTML = `<h3>Linha ${favorito.linha}</h3><p>${favorito.nome}</p>`;
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+
+      const btnChat = document.createElement('button');
+      btnChat.className = 'btn-chat';
+      btnChat.textContent = 'Chat';
+      btnChat.onclick = () => alert(`Abrindo chat da linha ${favorito.linha}`);
+
+      const btnNotif = document.createElement('button');
+      btnNotif.className = 'btn-notif';
+      btnNotif.textContent = 'Notificações';
+      btnNotif.onclick = () => alert(`Mostrando notificações da linha ${favorito.linha}`);
+
+      actions.appendChild(btnChat);
+      actions.appendChild(btnNotif);
+
+      div.appendChild(info);
+      div.appendChild(actions);
+
+      return div;
+    }
+
+    function carregarFavoritos() {
+      listaFavoritosDiv.innerHTML = '';
+      if (favoritos.length === 0) {
+        semFavoritosDiv.style.display = 'block';
+        return;
+      }
+      semFavoritosDiv.style.display = 'none';
+      favoritos.forEach(fav => {
+        listaFavoritosDiv.appendChild(criarElementoFavorito(fav));
+      });
+    }
+
+    carregarFavoritos();
+  </script>
+</body>
+</html>

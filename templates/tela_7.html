@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Encaminhar Demanda - ComuBus</title>
+  <link rel="stylesheet" href="/static/css/tela_7.css" />  
+</head>
+<body>
+  <div class="container">
+    <header>Encaminhar Demanda</header>
+    <form id="demandForm">
+      <label for="linha">Linha de Ônibus</label>
+      <select id="linha" required>
+        <option value="">Selecione a linha</option>
+        <option value="T1">T1 — Terminal Vila Jardim ↔ Centro</option>
+        <option value="T2">T2 — Terminal Vila Jardim ↔ Restinga</option>
+        <option value="T7">T7 — Terminal Vila Jardim ↔ Menino Deus</option>
+        <option value="110">110 — Vila Jardim ↔ Partenon</option>
+        <option value="115">115 — Vila Jardim ↔ Centro Histórico</option>
+        <option value="353">353 — Vila Jardim ↔ Terminal Menino Deus</option>
+        <option value="352">352 — Vila Jardim ↔ Navegantes</option>
+        <option value="354">354 — Vila Jardim ↔ Vila Nova</option>
+        <option value="356">356 — Vila Jardim ↔ São João</option>
+        <option value="357">357 — Vila Jardim ↔ Lomba do Pinheiro</option>
+        <option value="409">409 — Vila Jardim ↔ Humaitá</option>
+        <option value="410">410 — Vila Jardim ↔ Vila Nova</option>
+        <option value="411">411 — Vila Jardim ↔ Cristal</option>
+        <option value="412">412 — Vila Jardim ↔ Restinga</option>
+        <option value="415">415 — Vila Jardim ↔ Protásio Alves</option>
+      </select>
+
+      <label for="tipoProblema">Tipo de Problema</label>
+      <select id="tipoProblema" required>
+        <option value="">Selecione o tipo</option>
+        <option value="reclamacao">Reclamação</option>
+        <option value="sugestao">Sugestão</option>
+        <option value="ocorrencia">Ocorrência no trajeto</option>
+        <option value="outro">Outro</option>
+      </select>
+
+      <label for="comentario">Comentário</label>
+      <textarea id="comentario" placeholder="Descreva a sua demanda..." required></textarea>
+
+      <label for="foto">Foto (opcional)</label>
+      <input type="file" id="foto" accept="image/*" />
+
+      <button type="submit">Encaminhar à Secretaria/Empresa</button>
+    </form>
+
+    <div class="status" id="statusBox"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('demandForm');
+    const statusBox = document.getElementById('statusBox');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Simula envio da demanda
+      const linha = form.linha.value;
+      const tipo = form.tipoProblema.value;
+      const comentario = form.comentario.value.trim();
+      const foto = form.foto.files[0];
+
+      // Validar campos (já exigidos pelo required)
+      if (!linha || !tipo || !comentario) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+
+      statusBox.style.display = 'block';
+      statusBox.textContent = 'Enviando demanda...';
+
+      // Simula upload e envio com delay
+      setTimeout(() => {
+        // Simulação sucesso
+        statusBox.textContent = `Demanda enviada com sucesso para a linha ${linha}. Você pode acompanhar o status aqui.`;
+
+        // Limpa formulário
+        form.reset();
+
+        // Depois de enviar, exibir status inicial da demanda
+        // Aqui poderia ser conectado a backend para acompanhar status real
+      }, 1500);
+    });
+  </script>
+</body>
+</html>

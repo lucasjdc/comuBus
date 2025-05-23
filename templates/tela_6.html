@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat - ComuBus</title>
+  <link rel="stylesheet" href="/static/css/tela_6.css" /> 
+  
+</head>
+<body>
+  <div class="container">
+    <header>Linha T1 - Chat Comunitário</header>
+
+    <div class="messages" id="messages">
+      <!-- mensagens irão aqui -->
+    </div>
+
+    <div class="input-area">
+      <textarea id="inputMessage" placeholder="Digite sua mensagem..."></textarea>
+
+      <label title="Enviar foto 📷" for="inputPhoto">📷
+        <input type="file" id="inputPhoto" accept="image/*" />
+      </label>
+
+      <button class="location-btn" title="Enviar localização 📍" id="btnLocation">📍</button>
+      
+      <button id="btnSend" title="Enviar mensagem">➡️</button>
+    </div>
+  </div>
+
+  <script>
+    const messagesDiv = document.getElementById('messages');
+    const inputMessage = document.getElementById('inputMessage');
+    const inputPhoto = document.getElementById('inputPhoto');
+    const btnSend = document.getElementById('btnSend');
+    const btnLocation = document.getElementById('btnLocation');
+
+    // Simulação de mensagens (com tags e votos)
+    let messages = [
+      {
+        id: 1,
+        author: 'João',
+        text: 'Ônibus lotado na parada do Menino Deus.',
+        reputation: 4,
+        tags: ['urgente'],
+        votes: { like: 5, dislike: 1 }
+      },
+      {
+        id: 2,
+        author: 'Maria',
+        text: 'Acidente na Av. Protásio Alves causa atraso.',
+        reputation: 3,
+        tags: ['útil'],
+        votes: { like: 8, dislike: 0 }
+      },
+      {
+        id: 3,
+        author: 'Carlos',
+        text: 'Informação falsa sobre engarrafamento, cuidado!',
+        reputation: 2,
+        tags: ['fake'],
+        votes: { like: 1, dislike: 10 }
+      }
+    ];
+
+    // Função para renderizar mensagens
+    function renderMessages() {
+      messagesDiv.innerHTML = '';
+      messages.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'message';
+
+        const author = document.createElement('div');
+        author.className = 'author';
+        author.textContent = `${msg.author} (Reputação: ${msg.reputation})`;
+
+        const text = document.createElement('div');
+        text.className = 'text';
+        text.textContent = msg.text;
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+
+        // Tags
+        const tagsDiv = document.createElement('div');
+        tagsDiv.className = 'tags';
+        if(msg.tags.includes('urgente')) {
+          const btn = criarTagBotao('Urgente', 'urgent', () => marcarTag(msg.id, 'urgente'));
+          tagsDiv.appendChild(btn);
+        } 
+        if(msg.tags.includes('útil')) {
+          const btn = criarTagBotao('Útil', 'useful', () => marcarTag(msg.id, 'útil'));
+          tagsDiv.appendChild(btn);
+        } 
+        if(msg.tags.includes('fake')) {
+          const btn = criarTagBotao('Fake', 'fake', () => marcarTag(msg.id, 'fake'));
+          tagsDiv.appendChild(btn);
+        }
+
+        // Se mensagem não tem alguma tag, mostrar botão para adicionar (pra simplificar, só um por vez)
+        ['urgente', 'útil', 'fake'].forEach(tag => {
+          if(!msg.tags.includes(tag)) {
+            const btn = criarTagBotao(`Marcar como ${tag}`, tag, () => marcarTag(msg.id, tag));
+            tagsDiv.appendChild(btn);
+          }
+        });
+
+        // Votação
+        const voteDiv = document.createElement('div');
+        voteDiv.className = 'vote';
+        voteDiv.innerHTML = `
+          👍 ${msg.votes.like} 
+          <button onclick="votar(${msg.id}, 'like')">👍</button>
+          👎 ${msg.votes.dislike} 
+          <button onclick="votar(${msg.id}, 'dislike')">👎</button>
+        `;
+
+        meta.appendChild(tagsDiv);
+        meta.appendChild(voteDiv);
+
+        msgDiv.appendChild(author);
+        msgDiv.appendChild(text);
+        msgDiv.appendChild(meta);
+
+        messagesDiv.appendChild(msgDiv);
+      });
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // Cria botão de tag
+    function criarTagBotao(texto, classe, onClick) {
+      const btn = document.createElement('button');
+      btn.className = `tag-btn ${classe}`;
+      btn.textContent = texto;
+      btn.onclick = () => {
+        onClick();
+        renderMessages();
+      };
+      return btn;
+    }
+
+    // Marca tag na mensagem (simples toggle)
+    function marcarTag(id, tag) {
+      const msg = messages.find(m => m.id === id);
+      if (!msg) return;
+      if (msg.tags.includes(tag)) {
+        // Remove tag
+        msg.tags = msg.tags.filter(t => t !== tag);
+      } else {
+        // Adiciona tag
+        msg.tags.push(tag);
+      }
+    }
+
+    // Função de votação
+    function votar(id, tipo) {
+      const msg = messages.find(m => m.id === id);
+      if (!msg) return;
+      if (tipo === 'like') msg.votes.like++;
+      else if (tipo === 'dislike') msg.votes.dislike++;
+      renderMessages();
+    }
+
+    // Envio da mensagem
+    btnSend.addEventListener('click', () => {
+      const texto = inputMessage.value.trim();
+      if (!texto && !inputPhoto.files.length) {
+        alert('Digite uma mensagem ou envie uma foto!');
+        return;
+      }
+
+      let novaMsg = {
+        id: messages.length + 1,
+        author: 'Você',
+        text: texto,
+        reputation: 5,
+        tags: [],
+        votes: { like: 0, dislike: 0 }
+      };
+
+      // Se enviou foto, adiciona texto com link fictício
+      if(inputPhoto.files.length) {
+        const fileName = inputPhoto.files[0].name;
+        novaMsg.text += novaMsg.text ? `\n📷 Foto: ${fileName}` : `📷 Foto: ${fileName}`;
+      }
+
+      messages.push(novaMsg);
+      inputMessage.value = '';
+      inputPhoto.value = '';
+      renderMessages();
+    });
+
+    // Enviar localização
+    btnLocation.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        alert('Geolocalização não suportada pelo navegador.');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        let novaMsg = {
+          id: messages.length + 1,
+          author: 'Você',
+          text: `📍 Localização: https://maps.google.com/?q=${latitude},${longitude}`,
+          reputation: 5,
+          tags: [],
+          votes: { like: 0, dislike: 0 }
+        };
+        messages.push(novaMsg);
+        renderMessages();
+      }, () => alert('Não foi possível obter a localização.'));
+    });
+
+    renderMessages();
+  </script>
+</body>
+</html>

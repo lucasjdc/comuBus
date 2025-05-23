@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notificações - ComuBus</title>
+  <link rel="stylesheet" href="/static/css/tela_5.css" />  
+</head>
+<body>
+  <div class="container">
+    <h1>Notificações</h1>
+
+    <h2>Alertas Recentes</h2>
+
+    <h3>Mensagens Novas</h3>
+    <ul id="mensagensNovas">
+      <!-- Exemplos -->
+      <li>Nova mensagem no chat da linha T1</li>
+      <li>Alerta urgente na linha 115</li>
+    </ul>
+
+    <h3>Ocorrências Importantes</h3>
+    <ul id="ocorrenciasImportantes">
+      <li>Acidente na linha 412 – atrasos previstos</li>
+      <li>Ônibus lotado na linha 357</li>
+    </ul>
+
+    <h3>Respostas de Órgãos Públicos</h3>
+    <ul id="respostasOrgaos">
+      <li>Secretaria de Transportes respondeu sua reclamação sobre a linha 110</li>
+    </ul>
+
+    <div class="configuracoes">
+      <h2>Configurações de Notificação</h2>
+
+      <div class="config-item">
+        <label for="toggleMensagens">Mensagens Novas</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleMensagens" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="config-item">
+        <label for="toggleOcorrencias">Ocorrências Importantes</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleOcorrencias" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <div class="config-item">
+        <label for="toggleRespostas">Respostas de Órgãos Públicos</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleRespostas" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Exemplo: controle simples das configurações (apenas visual)
+    const toggles = ['toggleMensagens', 'toggleOcorrencias', 'toggleRespostas'];
+
+    toggles.forEach(id => {
+      const toggle = document.getElementById(id);
+      toggle.addEventListener('change', () => {
+        console.log(`${id} está ${toggle.checked ? 'ativado' : 'desativado'}`);
+        // Aqui poderia salvar as configurações em backend/localStorage
+      });
+    });
+  </script>
+</body>
+</html>
