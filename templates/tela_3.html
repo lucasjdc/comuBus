@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Busca - ComuBus</title>
+  <link rel="stylesheet" href="/static/css/tela_3.css" />  
+</head>
+<body>
+  <div class="container">
+    <h1>Buscar Linhas ou Comunidades</h1>
+    <input
+      type="text"
+      id="campoBusca"
+      placeholder="Digite número ou nome da linha"
+      autocomplete="off"
+      oninput="mostrarSugestoes()"
+    />
+    <div id="sugestoes" class="sugestoes" style="display:none"></div>
+
+    <div class="historico">
+      <h3>Histórico de Busca</h3>
+      <ul id="historicoLista"></ul>
+    </div>
+  </div>
+
+  <script>
+    const comunidades = [
+      { linha: 'T1', nome: 'Terminal Vila Jardim ↔ Centro' },
+      { linha: 'T2', nome: 'Terminal Vila Jardim ↔ Restinga' },
+      { linha: 'T7', nome: 'Terminal Vila Jardim ↔ Menino Deus' },
+      { linha: '110', nome: 'Vila Jardim ↔ Partenon' },
+      { linha: '115', nome: 'Vila Jardim ↔ Centro Histórico' },
+      { linha: '353', nome: 'Vila Jardim ↔ Terminal Menino Deus' },
+      { linha: '352', nome: 'Vila Jardim ↔ Navegantes' },
+      { linha: '354', nome: 'Vila Jardim ↔ Vila Nova' },
+      { linha: '356', nome: 'Vila Jardim ↔ São João' },
+      { linha: '357', nome: 'Vila Jardim ↔ Lomba do Pinheiro' },
+      { linha: '409', nome: 'Vila Jardim ↔ Humaitá' },
+      { linha: '410', nome: 'Vila Jardim ↔ Vila Nova' },
+      { linha: '411', nome: 'Vila Jardim ↔ Cristal' },
+      { linha: '412', nome: 'Vila Jardim ↔ Restinga' },
+      { linha: '415', nome: 'Vila Jardim ↔ Protásio Alves' },
+    ];
+
+    let historico = [];
+
+    const campoBusca = document.getElementById('campoBusca');
+    const sugestoesDiv = document.getElementById('sugestoes');
+    const historicoLista = document.getElementById('historicoLista');
+
+    function mostrarSugestoes() {
+      const valor = campoBusca.value.toLowerCase().trim();
+
+      if (!valor) {
+        sugestoesDiv.style.display = 'none';
+        return;
+      }
+
+      const filtradas = comunidades.filter(c =>
+        c.linha.toLowerCase().includes(valor) ||
+        c.nome.toLowerCase().includes(valor)
+      );
+
+      if (filtradas.length === 0) {
+        sugestoesDiv.style.display = 'none';
+        return;
+      }
+
+      sugestoesDiv.innerHTML = '';
+      filtradas.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'sugestao-item';
+        div.textContent = `Linha ${item.linha} – ${item.nome}`;
+        div.onclick = () => {
+          campoBusca.value = `Linha ${item.linha} – ${item.nome}`;
+          adicionarAoHistorico(campoBusca.value);
+          sugestoesDiv.style.display = 'none';
+        };
+        sugestoesDiv.appendChild(div);
+      });
+
+      sugestoesDiv.style.display = 'block';
+    }
+
+    function adicionarAoHistorico(texto) {
+      if (!historico.includes(texto)) {
+        historico.unshift(texto);
+        if (historico.length > 10) {
+          historico.pop();
+        }
+        renderizarHistorico();
+      }
+    }
+
+    function renderizarHistorico() {
+      historicoLista.innerHTML = '';
+      historico.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        li.onclick = () => {
+          campoBusca.value = item;
+          mostrarSugestoes();
+        };
+        historicoLista.appendChild(li);
+      });
+    }
+
+    // Inicializa histórico vazio
+    renderizarHistorico();
+  </script>
+</body>
+</html>

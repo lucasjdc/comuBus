@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Comunidades - ComuBus</title>
+  <link rel="stylesheet" href="/static/css/tela_2.css" />
+  
+</head>
+<body>
+  <div class="container">
+    <h1>Comunidades por Linha</h1>
+    <h2>Cidade: Porto Alegre</h2>
+
+    <input
+      type="text"
+      id="filtro"
+      placeholder="Filtrar por número da linha ou nome"
+      onkeyup="filtrarComunidades()"
+    />
+
+    <div id="listaComunidades"></div>
+
+    <div class="destaques">
+      <h3>Destaques</h3>
+      <ul id="listaDestaques"></ul>
+    </div>
+  </div>
+
+  <script>
+    const cidadeFixa = 'Porto Alegre';
+
+    const comunidades = [
+      { linha: 'T1', nome: 'Terminal Vila Jardim ↔ Centro', interacoes: 120 },
+      { linha: 'T2', nome: 'Terminal Vila Jardim ↔ Restinga', interacoes: 80 },
+      { linha: 'T7', nome: 'Terminal Vila Jardim ↔ Menino Deus', interacoes: 65 },
+      { linha: '110', nome: 'Vila Jardim ↔ Partenon', interacoes: 90 },
+      { linha: '115', nome: 'Vila Jardim ↔ Centro Histórico', interacoes: 130 },
+      { linha: '353', nome: 'Vila Jardim ↔ Terminal Menino Deus', interacoes: 55 },
+      { linha: '352', nome: 'Vila Jardim ↔ Navegantes', interacoes: 40 },
+      { linha: '354', nome: 'Vila Jardim ↔ Vila Nova', interacoes: 50 },
+      { linha: '356', nome: 'Vila Jardim ↔ São João', interacoes: 30 },
+      { linha: '357', nome: 'Vila Jardim ↔ Lomba do Pinheiro', interacoes: 25 },
+      { linha: '409', nome: 'Vila Jardim ↔ Humaitá', interacoes: 70 },
+      { linha: '410', nome: 'Vila Jardim ↔ Vila Nova', interacoes: 35 },
+      { linha: '411', nome: 'Vila Jardim ↔ Cristal', interacoes: 45 },
+      { linha: '412', nome: 'Vila Jardim ↔ Restinga', interacoes: 60 },
+      { linha: '415', nome: 'Vila Jardim ↔ Protásio Alves', interacoes: 75 },
+    ];
+
+    function criarElementoComunidade(comunidade) {
+      const div = document.createElement('div');
+      div.className = 'comunidade';
+
+      const info = document.createElement('div');
+      info.className = 'info';
+      info.innerHTML = `<h3>Linha ${comunidade.linha}</h3>
+                        <p>${comunidade.nome}</p>`;
+
+      const actions = document.createElement('div');
+      actions.className = 'actions';
+
+      const btnFavoritar = document.createElement('button');
+      btnFavoritar.className = 'btn-favoritar';
+      btnFavoritar.textContent = 'Favoritar';
+      btnFavoritar.onclick = () => alert(`Favoritada a linha ${comunidade.linha}`);
+
+      const btnChat = document.createElement('button');
+      btnChat.className = 'btn-chat';
+      btnChat.textContent = 'Chat';
+      btnChat.onclick = () => alert(`Entrando no chat da linha ${comunidade.linha}`);
+
+      actions.appendChild(btnFavoritar);
+      actions.appendChild(btnChat);
+
+      div.appendChild(info);
+      div.appendChild(actions);
+
+      return div;
+    }
+
+    function filtrarComunidades() {
+      const filtro = document.getElementById('filtro').value.toLowerCase();
+      const lista = document.getElementById('listaComunidades');
+      lista.innerHTML = '';
+
+      const filtradas = comunidades.filter(c =>
+        c.linha.toLowerCase().includes(filtro) ||
+        c.nome.toLowerCase().includes(filtro)
+      );
+
+      filtradas.forEach(c => {
+        lista.appendChild(criarElementoComunidade(c));
+      });
+    }
+
+    function carregarDestaques() {
+      const ul = document.getElementById('listaDestaques');
+      ul.innerHTML = '';
+
+      const top3 = [...comunidades]
+        .sort((a, b) => b.interacoes - a.interacoes)
+        .slice(0, 3);
+
+      top3.forEach(c => {
+        const li = document.createElement('li');
+        li.textContent = `Linha ${c.linha} – ${c.interacoes} interações recentes`;
+        ul.appendChild(li);
+      });
+    }
+
+    // Inicialização
+    filtrarComunidades();
+    carregarDestaques();
+  </script>
+</body>
+</html>
